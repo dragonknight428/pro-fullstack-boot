@@ -17,6 +17,7 @@ Browser / curl → API Gateway → Lambda → MongoDB on EC2
 
 ## Prerequisites
 
+- Completed [Lab — Deploy to EC2 with CI/CD](./Lab-Deploy-EC2-CICD.md) — Terraform must be installed
 - Completed [Lab — Lambda REST API](./Lab-Lambda-REST-API.md)
 - Region: **us-east-1**
 - Python and pip installed on your local machine (to build the Lambda package)
@@ -25,25 +26,49 @@ Browser / curl → API Gateway → Lambda → MongoDB on EC2
 
 ## Part 1 — Launch EC2 with MongoDB
 
-### Launch the instance
+### Launch the instance using Terraform
 
-1. Go to **EC2** → **Launch instance**
-2. Fill in:
-   - Name: `student-mongodb-server`
-   - AMI: **Ubuntu Server 22.04 LTS**
-   - Instance type: **t2.micro**
-   - Key pair: select an existing key pair or create one
-3. Under **Network settings** → **Edit**:
-   - Add inbound rule: **Custom TCP**, Port **27017**, Source **0.0.0.0/0**
-   - Keep the existing SSH (port 22) rule
-4. Click **Launch instance**
+Reuse the Terraform template from the previous lab (`terraform-ec2/`). Port **27017** is already open in the security group — confirm it is there before applying:
+
+```bash
+# From the terraform-ec2/ folder
+grep -A5 "MongoDB" main.tf
+```
+
+You should see:
+
+```hcl
+# MongoDB — direct access for Lambda and testing
+ingress {
+  from_port   = 27017
+  to_port     = 27017
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+}
+```
+
+If the block is missing, add it to the `aws_security_group` resource in `main.tf` before continuing.
+
+Then apply:
+
+```bash
+terraform init   # only needed first time
+terraform apply
+```
+
+Note the outputs — you will need the public IP and the SSH command:
+
+```
+instance_public_ip = "x.x.x.x"
+ssh_command        = "ssh -i ssh-keys/student-employee-app-key.pem ubuntu@x.x.x.x"
+```
 
 ### Install MongoDB via SSH
 
-Once the instance is running, SSH into it:
+Copy the SSH command from the Terraform output and connect:
 
 ```bash
-ssh -i your-key.pem ubuntu@<EC2_PUBLIC_IP>
+ssh -i ssh-keys/student-employee-app-key.pem ubuntu@<EC2_PUBLIC_IP>
 ```
 
 Then run:
