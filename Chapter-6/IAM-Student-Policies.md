@@ -13,6 +13,8 @@ Add student IAM users to that group.
 | `StudentLambdaPolicy` | Lambda | Chapter 6, 7 |
 | `StudentAPIGatewayPolicy` | API Gateway | Chapter 6, 7 |
 | `StudentIAMPolicy` | IAM (scoped to Lambda roles only) | Chapter 6, 7 |
+| `StudentTaggingPolicy` | Resource Groups Tagging API | Chapter 6, 7 |
+| `StudentCloudWatchPolicy` | CloudWatch Metrics & Logs | Chapter 6, 7 |
 
 ---
 
@@ -165,7 +167,10 @@ Add student IAM users to that group.
         "s3:PutBucketVersioning",
         "s3:GetBucketRequestPayment",
         "s3:GetBucketLogging",
+        "s3:GetBucketNotification",
+        "s3:PutBucketNotification",
         "s3:GetEncryptionConfiguration",
+        "s3:PutEncryptionConfiguration",
         "s3:GetLifecycleConfiguration",
         "s3:GetReplicationConfiguration"
       ],
@@ -275,12 +280,20 @@ Add student IAM users to that group.
         "lambda:DeleteFunction",
         "lambda:GetFunction",
         "lambda:GetFunctionConfiguration",
-        "lambda:ListFunctions",
+        "lambda:InvokeFunction",
         "lambda:TagResource",
         "lambda:UntagResource",
         "lambda:ListTags"
       ],
       "Resource": "arn:aws:lambda:us-east-1:YOUR_ACCOUNT_ID:function:student-*"
+    },
+    {
+      "Sid": "LambdaListAll",
+      "Effect": "Allow",
+      "Action": [
+        "lambda:ListFunctions"
+      ],
+      "Resource": "*"
     },
     {
       "Sid": "LambdaPermissions",
@@ -297,7 +310,8 @@ Add student IAM users to that group.
       "Effect": "Allow",
       "Action": [
         "lambda:GetFunctionCodeSigningConfig",
-        "lambda:ListFunctionEventInvokeConfigs"
+        "lambda:ListFunctionEventInvokeConfigs",
+        "lambda:GetRuntimeManagementConfig"
       ],
       "Resource": "arn:aws:lambda:us-east-1:YOUR_ACCOUNT_ID:function:student-*"
     }
@@ -362,7 +376,22 @@ Add student IAM users to that group.
         "iam:ListRolePolicies",
         "iam:GetRolePolicy"
       ],
-      "Resource": "arn:aws:iam::YOUR_ACCOUNT_ID:role/student-*"
+      "Resource": [
+        "arn:aws:iam::YOUR_ACCOUNT_ID:role/student-*",
+        "arn:aws:iam::YOUR_ACCOUNT_ID:role/service-role/student-*"
+      ]
+    },
+    {
+      "Sid": "CreateLambdaExecutionPolicy",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreatePolicy",
+        "iam:DeletePolicy",
+        "iam:GetPolicy",
+        "iam:GetPolicyVersion",
+        "iam:ListPolicies"
+      ],
+      "Resource": "*"
     },
     {
       "Sid": "AttachLambdaBasicExecutionOnly",
@@ -371,10 +400,16 @@ Add student IAM users to that group.
         "iam:AttachRolePolicy",
         "iam:DetachRolePolicy"
       ],
-      "Resource": "arn:aws:iam::YOUR_ACCOUNT_ID:role/student-*",
+      "Resource": [
+        "arn:aws:iam::YOUR_ACCOUNT_ID:role/student-*",
+        "arn:aws:iam::YOUR_ACCOUNT_ID:role/service-role/student-*"
+      ],
       "Condition": {
-        "ArnEquals": {
-          "iam:PolicyARN": "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        "ArnLike": {
+          "iam:PolicyARN": [
+            "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+            "arn:aws:iam::YOUR_ACCOUNT_ID:policy/*"
+          ]
         }
       }
     },
@@ -382,7 +417,10 @@ Add student IAM users to that group.
       "Sid": "PassRoleToLambdaOnly",
       "Effect": "Allow",
       "Action": "iam:PassRole",
-      "Resource": "arn:aws:iam::YOUR_ACCOUNT_ID:role/student-*",
+      "Resource": [
+        "arn:aws:iam::YOUR_ACCOUNT_ID:role/student-*",
+        "arn:aws:iam::YOUR_ACCOUNT_ID:role/service-role/student-*"
+      ],
       "Condition": {
         "StringEquals": {
           "iam:PassedToService": "lambda.amazonaws.com"
@@ -395,6 +433,96 @@ Add student IAM users to that group.
 
 > **Critical:** This policy only allows attaching `AWSLambdaBasicExecutionRole`.
 > Students cannot escalate to admin by attaching `AdministratorAccess` to their role.
+
+---
+
+## Policy 7 — StudentTaggingPolicy
+
+> Allows reading and managing resource tags across all AWS services.
+> Required for the Lambda and S3 consoles to display and manage tags.
+> `tag:*` actions always require `Resource: "*"` — the Tagging API does not support resource-level restrictions.
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowResourceTagging",
+      "Effect": "Allow",
+      "Action": [
+        "tag:GetResources",
+        "tag:TagResources",
+        "tag:UntagResources",
+        "tag:GetTagKeys",
+        "tag:GetTagValues"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+---
+
+## Policy 8 — StudentCloudWatchPolicy
+
+> Allows viewing CloudWatch metrics and logs — required for the Lambda Monitor tab (invocation counts, errors, duration graphs, and log streams).
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CloudWatchMetrics",
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:GetMetricData",
+        "cloudwatch:GetMetricStatistics",
+        "cloudwatch:ListMetrics",
+        "cloudwatch:DescribeAlarms",
+        "cloudwatch:DescribeAlarmsForMetric",
+        "cloudwatch:GetDashboard",
+        "cloudwatch:ListDashboards"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "CloudWatchLogs",
+      "Effect": "Allow",
+      "Action": [
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams",
+        "logs:GetLogEvents",
+        "logs:FilterLogEvents",
+        "logs:StartQuery",
+        "logs:StopQuery",
+        "logs:GetQueryResults",
+        "logs:DescribeQueries",
+        "logs:DescribeSubscriptionFilters",
+        "logs:ListTagsLogGroup",
+        "logs:ListTagsForResource",
+        "logs:GetLogGroupFields",
+        "logs:GetLogRecord",
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "XRayTracing",
+      "Effect": "Allow",
+      "Action": [
+        "xray:GetTraceSummaries",
+        "xray:BatchGetTraces",
+        "xray:GetServiceGraph",
+        "xray:GetTraceGraph"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
 
 ---
 
