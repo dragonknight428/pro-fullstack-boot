@@ -2,18 +2,7 @@
 
 > Build and ship a production-ready full-stack AI-assisted app — FastAPI + React + MongoDB + AWS + Terraform + GitHub Actions
 
-**This is the official curriculum repo for the [Full Stack AI Bootcamp](https://becloudready.com/programs/full-stack-ai-bootcamp) by [beCloudReady](https://becloudready.com).**
-
----
-
-## Want hands-on guidance from an instructor?
-
-**[Register for the FREE Live Webinar →](https://luma.com/zmls3trz)**
-See a live project demo, walk through this exact repo with the instructor, and get your questions answered.
-
-
-**Next cohort: Only 20 seats — [Enroll Now](https://becloudready.com/programs/full-stack-ai-bootcamp)**
-
+**This is the official curriculum repo maintained by [beCloudReady](https://becloudready.com).**
 
 ---
 
