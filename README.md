@@ -97,18 +97,6 @@ projects/          # Capstone and assignment projects
 
 ---
 
-## Why This Bootcamp?
-
-| | This Bootcamp | Traditional Bootcamp | Self-Paced (Udemy) |
-|---|---|---|---|
-| Live instructor | Yes | Yes | No |
-| AI tools workflow | Yes | Rarely | No |
-| Production deployment | Yes | Sometimes | No |
-| Job-ready in 5 days | Yes | 3–6 months | Months |
-| Community & support | Lifetime Discord | Limited | Forum only |
-
----
-
 ## About beCloudReady
 
 beCloudReady bridges the gap between ambitious talent and fast-moving startups — practical training, real projects, no fluff.
