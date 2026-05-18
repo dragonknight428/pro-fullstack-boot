@@ -12,3 +12,9 @@ variable "aws_region" {
   type        = string
   default     = "us-east-1"
 }
+
+variable "cohort" {
+  description = "Cohort identifier (e.g. fullstack-aws-batch-a). Tagged on every resource for cohort-scoped cleanup."
+  type        = string
+  default     = "fullstack-aws"
+}

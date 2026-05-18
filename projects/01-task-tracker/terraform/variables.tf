@@ -19,3 +19,9 @@ variable "aws_region" {
 variable "mongo_host" {
   description = "EC2 public IP running MongoDB"
 }
+
+variable "cohort" {
+  description = "Cohort identifier (e.g. fullstack-aws-batch-a). Tagged on every resource for cohort-scoped cleanup."
+  type        = string
+  default     = "fullstack-aws"
+}

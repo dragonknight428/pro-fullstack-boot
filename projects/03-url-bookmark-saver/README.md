@@ -138,7 +138,7 @@ The workflow prefers OIDC when `URL_BOOKMARK_SAVER_AWS_ROLE_ARN` is set. Otherwi
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Frontend (open this in your browser):
-  http://stash-john-smith-frontend-123456789012.s3-website-us-east-1.amazonaws.com
+  http://student-john-smith-frontend-123456789012.s3-website-us-east-1.amazonaws.com
 
   API endpoints:
   GET    https://abc123.execute-api.us-east-1.amazonaws.com/bookmarks
@@ -146,10 +146,10 @@ The workflow prefers OIDC when `URL_BOOKMARK_SAVER_AWS_ROLE_ARN` is set. Otherwi
   DELETE https://abc123.execute-api.us-east-1.amazonaws.com/bookmarks/{id}
 
   AWS resources:
-  Lambda    : stash-john-smith-api
-  DynamoDB  : stash-john-smith-bookmarks
-  S3 bucket : stash-john-smith-frontend-123456789012
-  Dashboard : https://us-east-1.console.aws.amazon.com/cloudwatch/home#dashboards:name=stash-john-smith-dashboard
+  Lambda    : student-john-smith-api
+  DynamoDB  : student-john-smith-bookmarks
+  S3 bucket : student-john-smith-frontend-123456789012
+  Dashboard : https://us-east-1.console.aws.amazon.com/cloudwatch/home#dashboards:name=student-john-smith-dashboard
 ```
 
 ---
@@ -314,7 +314,7 @@ Every Lambda invocation emits a structured JSON log line:
 
 View logs:
 ```bash
-aws logs tail /aws/lambda/stash-<name>-api --follow --region us-east-1
+aws logs tail /aws/lambda/student-<name>-api --follow --region us-east-1
 ```
 
 ---

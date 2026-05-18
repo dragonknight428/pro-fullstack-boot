@@ -97,6 +97,46 @@ projects/          # Capstone and assignment projects
 
 ---
 
+## Resource Naming & Tagging — required convention
+
+When you run a shared AWS account with multiple students, the only thing keeping your cohort organized (and cleanup-able) is consistent naming and tagging.
+
+### Naming
+
+Every AWS resource you create — in Console or via Terraform — must start with:
+
+```
+student-<your-slug>-
+```
+
+Your slug is the lowercase-hyphenated version of your name that the cohort admin assigned (e.g. `alice-johnson`, `bilal-joud`). It matches the prefix of your IAM username and the value you pass as `student_name=` in any project's Terraform.
+
+The IAM policy enforces this for S3, Lambda, DynamoDB, CloudWatch Logs, and IAM roles — anything you try to create outside your namespace will be denied.
+
+### Tagging
+
+Two tags on every resource you create:
+
+| Key | Value | Example |
+|---|---|---|
+| `student` | your slug | `alice-johnson` |
+| `cohort` | the cohort name your admin gave you | `fullstack-aws-batch-a` |
+
+**For Terraform-managed resources**: every project's `provider "aws"` block uses `default_tags`, so this is automatic — you only supply `student_name=` and `cohort=` as variables. Nothing else to do.
+
+**For Console-created resources**: add both tags manually in the "Tags" step of the Create wizard. Most Console flows surface this step before the final "Create" button. If you skip it, the resource still works, but the cohort cleanup tool may miss it (and that often translates to "your instructor pings you to delete it manually before billing closes").
+
+### Why this matters
+
+The instructor runs `tools/cleanup-student-resources.py` at the end of the cohort to remove everything. It finds your resources two ways:
+
+1. **By name** — anything matching `student-<your-slug>-*`
+2. **By tag** — anything tagged `student=<your-slug>`
+
+Either one finds you. Both is belt-and-suspenders. Neither leaves you on the hook for a forgotten Lambda still racking up free-tier invocations next month.
+
+---
+
 ## About beCloudReady
 
 beCloudReady bridges the gap between ambitious talent and fast-moving startups — practical training, real projects, no fluff.

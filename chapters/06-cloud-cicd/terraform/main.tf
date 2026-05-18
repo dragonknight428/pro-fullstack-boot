@@ -17,6 +17,18 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
+  default_tags {
+    tags = {
+      student = var.student_name
+      cohort  = var.cohort
+    }
+  }
+}
+
+locals {
+  # All resources prefixed student-<slug>-<project>- so they fit the IAM
+  # namespace policy and are pickable by the cleanup script.
+  name = "student-${var.student_name}-${var.project_name}"
 }
 
 # ─────────────────────────────────────────────
@@ -31,14 +43,14 @@ resource "tls_private_key" "ec2_key" {
 
 # Register public key with AWS
 resource "aws_key_pair" "ec2_key" {
-  key_name   = "${var.project_name}-key"
+  key_name   = "${local.name}-key"
   public_key = tls_private_key.ec2_key.public_key_openssh
 }
 
 # Save private key to ssh-keys/ folder with correct permissions
 resource "local_sensitive_file" "private_key" {
   content         = tls_private_key.ec2_key.private_key_pem
-  filename        = "${path.module}/ssh-keys/${var.project_name}-key.pem"
+  filename        = "${path.module}/ssh-keys/${local.name}-key.pem"
   file_permission = "0400"
 }
 
@@ -47,8 +59,8 @@ resource "local_sensitive_file" "private_key" {
 # ─────────────────────────────────────────────
 
 resource "aws_security_group" "ec2" {
-  name        = "${var.project_name}-sg"
-  description = "Security group for ${var.project_name} EC2 instance"
+  name        = "${local.name}-sg"
+  description = "Security group for ${local.name} EC2 instance"
 
   # SSH — for deployment and management
   ingress {
@@ -96,8 +108,8 @@ resource "aws_security_group" "ec2" {
   }
 
   tags = {
-    Name    = "${var.project_name}-sg"
-    Project = var.project_name
+    Name    = "${local.name}-sg"
+    Project = local.name
   }
 }
 
@@ -161,7 +173,7 @@ resource "aws_instance" "app" {
   EOF
 
   tags = {
-    Name    = "${var.project_name}-server"
-    Project = var.project_name
+    Name    = "${local.name}-server"
+    Project = local.name
   }
 }

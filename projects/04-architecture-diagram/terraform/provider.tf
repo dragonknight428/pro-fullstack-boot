@@ -12,9 +12,8 @@ provider "aws" {
   region = var.aws_region
   default_tags {
     tags = {
-      Project   = "arcflow"
-      Student   = var.student_name
-      ManagedBy = "terraform"
+      student = var.student_name
+      cohort  = var.cohort
     }
   }
 }

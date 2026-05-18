@@ -7,6 +7,12 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
+  default_tags {
+    tags = {
+      student = var.student_name
+      cohort  = var.cohort
+    }
+  }
 }
 
 resource "random_id" "suffix" {

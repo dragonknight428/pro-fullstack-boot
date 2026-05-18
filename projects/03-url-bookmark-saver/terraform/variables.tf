@@ -31,7 +31,13 @@ variable "log_retention_days" {
   default     = 14
 }
 
+variable "cohort" {
+  description = "Cohort identifier (e.g. fullstack-aws-batch-a). Tagged on every resource for cohort-scoped cleanup."
+  type        = string
+  default     = "fullstack-aws"
+}
+
 locals {
-  prefix     = "stash-${var.student_name}"
+  prefix     = "student-${var.student_name}"
   account_id = data.aws_caller_identity.current.account_id
 }
