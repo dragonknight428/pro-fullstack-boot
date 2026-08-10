@@ -1,13 +1,3 @@
-# Vibe Code to Production Bootcamp
-
-Active Fullstack workshop repo has been moved to https://github.com/becloudready/workshops
-
-> Build and ship a production-ready full-stack AI-assisted app — FastAPI + React + MongoDB + AWS + Terraform + GitHub Actions
-
-**This is the official curriculum repo maintained by [beCloudReady](https://becloudready.com).**
-
----
-
 ## What You'll Build
 
 A job-ready portfolio project deployed to AWS — built entirely with AI-assisted (vibe) coding:
@@ -37,31 +27,6 @@ By the end you'll have a running production app on AWS — with tests, JWT auth,
 | [05 — Infrastructure](./chapters/05-infrastructure/) | IaC | Terraform fundamentals, provisioning AWS resources |
 | [06 — Cloud & CI/CD](./chapters/06-cloud-cicd/) | AWS | EC2, Lambda, API Gateway, S3, GitHub Actions |
 | [07 — React](./chapters/07-react/) | Frontend | React labs, component architecture, full-stack integration |
-
----
-
-## Projects
-
-| Project | Stack | Description |
-|---------|-------|-------------|
-| [01 — Task Tracker](./projects/01-task-tracker/) | React + Lambda + MongoDB | Kanban-style task board — full-stack capstone |
-| [02 — Notice Board](./projects/02-notice-board/) | React + S3 + Lambda | Assignment project with 3 difficulty tiers |
-
----
-
-## Quick Start
-
-Clone this repo and get your environment ready before the bootcamp starts:
-
-```bash
-git clone https://github.com/becloudready/vibe-code-to-prod.git
-cd vibe-code-to-prod
-```
-
-**Prerequisites:**
-- Basic programming knowledge (Python or JavaScript)
-- AWS account (free tier works)
-- Installed: AWS CLI, Terraform, Node.js 18+, Git
 
 ---
 
@@ -136,21 +101,3 @@ The instructor runs `tools/cleanup-student-resources.py` at the end of the cohor
 2. **By tag** — anything tagged `student=<your-slug>`
 
 Either one finds you. Both is belt-and-suspenders. Neither leaves you on the hook for a forgotten Lambda still racking up free-tier invocations next month.
-
----
-
-## About beCloudReady
-
-beCloudReady bridges the gap between ambitious talent and fast-moving startups — practical training, real projects, no fluff.
-
-- **500+ graduates** placed at companies including Oxford Properties, Bell, ConnectWise, Softchoice
-- **94% placement rate**
-- **3× average salary growth** reported by graduates
-
-[Learn more → becloudready.com](https://becloudready.com) | [All Programs](https://becloudready.com/programs)
-
----
-
-## License
-
-MIT
