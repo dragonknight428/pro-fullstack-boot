@@ -1,5 +1,7 @@
 # Vibe Code to Production Bootcamp
 
+Fullstack workshop repo has been moved to https://github.com/becloudready/workshops
+
 > Build and ship a production-ready full-stack AI-assisted app — FastAPI + React + MongoDB + AWS + Terraform + GitHub Actions
 
 **This is the official curriculum repo maintained by [beCloudReady](https://becloudready.com).**
